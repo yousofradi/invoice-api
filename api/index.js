@@ -1,7 +1,5 @@
-const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium');
+const chromium = require('chrome-aws-lambda');
 
-// إعدادات Vercel للتعامل مع نصوص HTML الطويلة
 export const config = {
   api: {
     bodyParser: {
@@ -25,11 +23,11 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'HTML is required' });
     }
 
-    // تشغيل المتصفح المخفي
-    browser = await puppeteer.launch({
+    // تشغيل المتصفح باستخدام إعدادات Vercel المحسنة
+    browser = await chromium.puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
+      executablePath: await chromium.executablePath,
       headless: chromium.headless,
       ignoreHTTPSErrors: true,
     });
@@ -42,12 +40,10 @@ export default async function handler(req, res) {
       deviceScaleFactor: body.deviceScaleFactor || 2 
     });
     
-    // حقن الفاتورة
     await page.setContent(html, { waitUntil: 'networkidle0' });
     
     let imageBuffer;
     
-    // تصوير العنصر المحدد أو الصفحة بأكملها
     if (body.selector) {
       const element = await page.$(body.selector);
       if (element) {
@@ -59,11 +55,8 @@ export default async function handler(req, res) {
       imageBuffer = await page.screenshot({ fullPage: body.fullPage || true, omitBackground: body.omitBackground || false });
     }
     
-    await browser.close();
-    
     // إرسال الصورة
     res.setHeader('Content-Type', 'image/png');
-    // التحكم بالكاش (Cache) - اختياري
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(imageBuffer);
 
