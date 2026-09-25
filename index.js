@@ -11,15 +11,14 @@ app.post('/api/render', async (req, res) => {
     if (!body.html) return res.status(400).json({ error: 'HTML is required' });
 
     browser = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu'
-      ],
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH
-    });
+          headless: 'new',
+          args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu'
+          ]
+        });
 
     const page = await browser.newPage();
     await page.setViewport({ 
