@@ -1,12 +1,11 @@
 {
-  "name": "vercel-invoice-api",
+  "name": "render-invoice-api",
   "version": "1.0.0",
-  "description": "HTML to Image API for invoice generation",
-  "engines": {
-    "node": "24.x"
+  "scripts": {
+    "start": "node index.js"
   },
   "dependencies": {
-    "@sparticuz/chromium-min": "123.0.1",
-    "puppeteer-core": "^23.0.0"
+    "express": "^4.19.0",
+    "puppeteer": "^22.6.0"
   }
 }
