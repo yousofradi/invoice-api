@@ -1,9 +1,9 @@
 {
-  "name": "invoice-api",
+  "name": "vercel-invoice-api",
   "version": "1.0.0",
   "description": "HTML to Image API for invoice generation",
   "dependencies": {
-    "@sparticuz/chromium": "^123.0.1",
-    "puppeteer-core": "^22.6.0"
+    "chrome-aws-lambda": "^10.1.0",
+    "puppeteer-core": "^10.1.0"
   }
 }
