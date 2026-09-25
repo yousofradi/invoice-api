@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "HTML to Image API for invoice generation",
   "engines": {
-    "node": "18.x"
+    "node": "24.x"
   },
   "dependencies": {
     "@sparticuz/chromium-min": "123.0.1",
-    "puppeteer-core": "22.6.0"
+    "puppeteer-core": "^23.0.0"
   }
 }
