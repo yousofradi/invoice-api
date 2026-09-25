@@ -4,6 +4,16 @@ const puppeteer = require('puppeteer');
 const app = express();
 app.use(express.json({ limit: '10mb' }));
 
+// GET route for health check and root path
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'API is running successfully', timestamp: new Date().toISOString() });
+});
+
+// GET route for /api/render to show it's active
+app.get('/api/render', (req, res) => {
+  res.status(200).json({ message: 'Render API is active. Send a POST request with HTML to generate an image.' });
+});
+
 app.post('/api/render', async (req, res) => {
   let browser;
   try {
@@ -11,14 +21,14 @@ app.post('/api/render', async (req, res) => {
     if (!body.html) return res.status(400).json({ error: 'HTML is required' });
 
     browser = await puppeteer.launch({
-          headless: 'new',
-          args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-gpu'
-          ]
-        });
+      headless: 'new',
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu'
+      ]
+    });
 
     const page = await browser.newPage();
     await page.setViewport({ 
@@ -26,9 +36,9 @@ app.post('/api/render', async (req, res) => {
       height: body.height || 800,
       deviceScaleFactor: body.deviceScaleFactor || 2 
     });
-
+    
     await page.setContent(body.html, { waitUntil: 'networkidle0' });
-
+    
     let imageBuffer;
     if (body.selector) {
       const element = await page.$(body.selector);
@@ -38,7 +48,7 @@ app.post('/api/render', async (req, res) => {
     } else {
       imageBuffer = await page.screenshot({ fullPage: true, omitBackground: body.omitBackground || false });
     }
-
+    
     res.setHeader('Content-Type', 'image/png');
     res.send(imageBuffer);
   } catch (error) {
